@@ -9,14 +9,18 @@ import (
 	"net/http"
 )
 
+func handleGetUser(w http.ResponseWriter, r *http.Request) {}
+func handleGetAccount(w http.ResponseWriter, r *http.Request) {}
 
 func main() {
 
 	listenAddr:= flag.String("listenaddr", ":49999", "ice cream")
 	flag.Parse()
 
-	http.ListenAndServe(*listenAddr, nil);
+	http.HandleFunc("/user", handleGetUser)
+	http.HandleFunc("/account", handleGetAccount)
 
+	http.ListenAndServe(*listenAddr, nil);
 
 	fmt.Println("--- Pupu opened the shop ---")
 	fmt.Println("--- Pupu have seen your order ---")

@@ -1,4 +1,4 @@
-# Concurrent Order Processor (Go Learning Lab)
+# Concurrent Order Processor (Go Learning Lab - Project is ongoing)
 
 A high-concurrency simulation of an order-processing system built to explore the Go CSP (Communicating Sequential Processes) model. This project serves as a practical deep-dive into Go's concurrency primitives, memory safety, and the differences between Go and low-level languages like C/C++.
 
