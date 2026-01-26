@@ -1,6 +1,6 @@
 # Concurrent Order Processor (Go Learning Lab - Project is ongoing)
-
-A high-concurrency simulation of an order-processing system built to explore the Go CSP (Communicating Sequential Processes) model. This project serves as a practical deep-dive into Go's concurrency primitives, memory safety, and the differences between Go and low-level languages like C/C++.
+A high-concurrency simulation of an ice-cream shop built to explore Go’s CSP model under real-world pressure: impatient customers, melting deadlines, and overwhelmed scoopers.
+This project serves as a hands-on deep dive into Go’s concurrency primitives, memory safety guarantees, and how Go’s user-space scheduler differs from OS-level threading models commonly used in C/C++.
 
 ## 🚀 Learning Objectives
 - Master Goroutine orchestration and lifecycle management.
@@ -8,7 +8,6 @@ A high-concurrency simulation of an order-processing system built to explore the
 - Detect and resolve non-deterministic Data Races.
 
 Compare Go's user-space scheduling with OS-level threading (pthreads).
-
 
 ## 🛠 Features (In-Progress)
 [ ] Asynchronous Scooping: Concurrent task execution using sync.WaitGroup.
