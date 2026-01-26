@@ -22,8 +22,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	//program creation
-	
+	//program creation, this is where args are being assigned
+	var program Program
+	initProgram(program)
 
 	//program start
 	

@@ -2,8 +2,9 @@
 package main
 
 import (
-		"context" 
-		"time"
+    "strconv"
+    "time"
+    "fmt"
 )
 
 type Program struct {
@@ -16,6 +17,10 @@ type Program struct {
 	
 	mealsRequired int
 
-	ctx context.Context // this is an interface, a shared signal says "program must stop now"
+	//ctx context.Context // this is an interface, a shared signal says "program must stop now"
+}
 
+//this function assigns each args to the equivalent in the struct
+func initProgram(program Program) {
+	
 }
