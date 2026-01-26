@@ -1,33 +1,32 @@
-package main
-
-//“It’s a small Go HTTP service with in-memory state, background order processing using goroutines, context-based cancellation, explicit error handling, and graceful shutdown.”
-
-import "fmt"
+package main //all files in this folder belong to the same exe program
 
 import (
-	"flag"
-	"net/http"
+	"os"
+	"fmt"
 )
-
-func handleGetUser(w http.ResponseWriter, r *http.Request) {}
-func handleGetAccount(w http.ResponseWriter, r *http.Request) {}
 
 func main() {
 
-	listenAddr:= flag.String("listenaddr", ":49999", "ice cream")
-	flag.Parse()
+	//create the args
 
-	http.HandleFunc("/user", handleGetUser)
-	http.HandleFunc("/account", handleGetAccount)
+	var executionArg []string = os.Args
+	var argsWithoutExe = os.Args[1:] // from index 1 until the end
 
-	http.ListenAndServe(*listenAddr, nil);
+    fmt.Println(executionArg)
+    fmt.Println(argsWithoutExe)
 
-	fmt.Println("--- Pupu opened the shop ---")
-	fmt.Println("--- Pupu have seen your order ---")
-	fmt.Println("--- Pupu is processing your ice cream orders ---")
-	fmt.Println("--- You chose to pay by cash! Baobao will deliver to you. Prepare your money! ---")
-	fmt.Println("--- Delivering... Baobao is on his way! ---")
-	fmt.Println("--- You bought 5 boxes of ice cream. You get 5 minutes hug with Baobao ---")
-	fmt.Println("--- Hope you enjoyed our service. See you again! ---")
+	// validation
+	err:= validateArgs(argsWithoutExe)
+	if err != nil {
+		fmt.Println("Error:", err)
+		os.Exit(1)
+	}
+
+	//program creation
+	
+
+	//program start
+	
+	fmt.Println("--- Philo Pupu opened the shop ---")
 
 }

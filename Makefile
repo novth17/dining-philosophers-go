@@ -1,8 +1,8 @@
 build:
-	go build -o bin/app
+	go build -o bin/philo
 
 run: build
-	./bin/app
+	./bin/philo
 
 test:
 	go test -v ./... -count=1
