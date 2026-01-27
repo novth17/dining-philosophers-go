@@ -1,8 +1,14 @@
+BIN=bin/philo
+PKG=./philo #go here to compile
+
 build:
-	go build -o bin/philo
+	go build -o $(BIN) $(PKG)
+
+race:
+	go build -race -o $(BIN) $(PKG)
 
 run: build
-	./bin/philo
+	./$(BIN)
 
 test:
-	go test -v ./... -count=1
+	go test -v $(PKG) -count=1

@@ -5,12 +5,14 @@ import (
 	"fmt"
 )
 
+
+
+
 func main() {
 
 	//create the args
-
-	var executionArg []string = os.Args
-	var argsWithoutExe = os.Args[1:] // from index 1 until the end
+	executionArg := os.Args
+	argsWithoutExe := os.Args[1:] // from index 1 until the end
 
     fmt.Println(executionArg)
     fmt.Println(argsWithoutExe)
@@ -23,11 +25,12 @@ func main() {
 	}
 
 	//program creation, this is where args are being assigned
-	var program Program
-	initProgram(program)
+	program, err:= NewProgram(argsWithoutExe)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		os.Exit(1)
+	}
 
 	//program start
-	
-	fmt.Println("--- Philo Pupu opened the shop ---")
-
+	program.Run()
 }
