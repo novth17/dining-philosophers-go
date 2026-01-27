@@ -5,9 +5,6 @@ import (
 	"fmt"
 )
 
-
-
-
 func main() {
 
 	//create the args
@@ -20,15 +17,13 @@ func main() {
 	// validation
 	err:= validateArgs(argsWithoutExe)
 	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(1)
+		fatal(err)
 	}
 
 	//program creation, this is where args are being assigned
 	program, err:= NewProgram(argsWithoutExe)
 	if err != nil {
-		fmt.Println("Error: ", err)
-		os.Exit(1)
+		fatal(err)
 	}
 
 	//program start
