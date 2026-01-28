@@ -6,12 +6,6 @@ import (
 	"time"
 )
 
-func (philo *Philo) isStarving() bool {
-	philo.prog.mealMutex.Lock()
-	defer philo.prog.mealMutex.Unlock()
-	return time.Since(philo.timeLastMeal) > philo.prog.timeDie
-}
-
 func (philo *Philo) routine(ctx context.Context) {  
 	program := philo.prog
 
@@ -21,11 +15,12 @@ func (philo *Philo) routine(ctx context.Context) {
 	}
 
 	for {
-		if !philo.eat(ctx) { return }
-		if !philo.sleep(ctx) { return }
-		if !philo.think(ctx) { return }
+		if !philo.eat(ctx) || !philo.sleep(ctx) || !philo.think(ctx) {
+			return
+		}
 	}
 }
+
 func (philo *Philo) eat(ctx context.Context) bool {
 	program := philo.prog
 	left := philo.id - 1
@@ -44,13 +39,10 @@ func (philo *Philo) eat(ctx context.Context) bool {
 
 	// single philosopher case
 	if program.numPhilos == 1 {
+		// hold the fork and wait for the monitor to kill us
 		first.Unlock()
-		select {
-		case <-time.After(program.timeDie + 10*time.Millisecond):
-			return false
-		case <-ctx.Done():
-			return false
-		}
+		<-ctx.Done() 
+		return false
 	}
 
 	second.Lock()
@@ -73,7 +65,6 @@ func (philo *Philo) eat(ctx context.Context) bool {
 
 	return eatSuccess
 }
-
 
 //sleep
 func (philo *Philo) sleep(ctx context.Context) bool {

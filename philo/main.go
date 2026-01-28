@@ -1,5 +1,4 @@
 package main //all files in this folder belong to the same exe program
-
 import (
 	"os"
 	"fmt"
@@ -28,4 +27,6 @@ func main() {
 
 	//program start
 	program.Run()
+
+	program.printCPUInfo()
 }

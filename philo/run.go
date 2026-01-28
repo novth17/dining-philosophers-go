@@ -30,4 +30,18 @@ func (program *Program) Run() {
     // Wait for everyone to respect the cancel() signal
     program.wg.Wait()
     fmt.Println("--- Party's over! ---")
+
+    // Check if mealsRequired was actually set (not -1)
+    if program.mealsRequired != -1 {
+        program.mealMutex.Lock()
+        defer program.mealMutex.Unlock()
+
+        fmt.Println("\n--- Final Meal Statistics ---")
+        for i := 0; i < program.numPhilos; i++ {
+            fmt.Printf("Philosopher %d finished %d/%d meals\n", 
+                program.philos[i].id, 
+                program.philos[i].mealCount, 
+                program.mealsRequired)
+        }
+    }
 }
