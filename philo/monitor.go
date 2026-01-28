@@ -6,20 +6,6 @@ import (
 	"time"
 )
 
-func (program *Program) checkAllFull() bool {
-    program.mealMutex.Lock()
-    defer program.mealMutex.Unlock()
-
-    fullPhilos := 0
-    for i := 0; i < program.numPhilos; i++ {
-        if program.philos[i].mealCount >= program.mealsRequired {
-            fullPhilos++
-        }
-    }
-    return fullPhilos == program.numPhilos
-}
-
-
 func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) {
     for {
         // Stop monitoring if simulation already ended (ctx.Done() or cancel() called elsewhere)
@@ -31,9 +17,8 @@ func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) 
             philo := &program.philos[i]
 
 			if philo.isStarving() {
-				
 				program.logMutex.Lock() 
-				program.stopSim = true //stop the similation
+				program.stopSim = true
 				ms := time.Since(program.startTime).Milliseconds()
 				fmt.Printf("%d %d died\n", ms, philo.id)
 				program.logMutex.Unlock()
@@ -47,8 +32,25 @@ func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) 
             cancel()
             return
         }
-
-        // Small sleep to avoid burning CPU
         time.Sleep(500 * time.Microsecond)
     }
+}
+
+func (philo *Philo) isStarving() bool {
+	philo.prog.mealMutex.Lock()
+	defer philo.prog.mealMutex.Unlock()
+	return time.Since(philo.timeLastMeal) > philo.prog.timeDie
+}
+
+func (program *Program) checkAllFull() bool {
+    program.mealMutex.Lock()
+    defer program.mealMutex.Unlock()
+
+    fullPhilos := 0
+    for i := 0; i < program.numPhilos; i++ {
+        if program.philos[i].mealCount >= program.mealsRequired {
+            fullPhilos++
+        }
+    }
+    return fullPhilos == program.numPhilos
 }

@@ -13,13 +13,11 @@ type Philo struct {
 }
 
 type Program struct {
-	
 	numPhilos int
 	timeDie time.Duration
 	timeEat time.Duration
 	timeSleep time.Duration
 	mealsRequired int 
-
 	startTime time.Time
 	stopSim bool
 
@@ -34,7 +32,6 @@ type Program struct {
 	mealMutex sync.Mutex
 	wg         sync.WaitGroup
 	
-	//ctx context.Context // this is an interface, a shared signal says "program must stop now"
 }
 
 //this function assigns each args to the equivalent in the struct

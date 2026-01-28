@@ -8,7 +8,6 @@ import (
 func initProgram(program *Program, args []string) error {
 
 	var err	error
-
 	program.numPhilos, err = parsePositiveNumber(args[0])
 	if err != nil {
 		return err
@@ -51,7 +50,6 @@ func initProgram(program *Program, args []string) error {
 
 func initPhilo(program *Program) error {
 
-	//Slices can be created with the built-in make
 	program.philos = make([]Philo, program.numPhilos)
 
 	for i := 0; i < program.numPhilos; i++ {
