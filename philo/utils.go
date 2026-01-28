@@ -15,18 +15,18 @@ func fatal(err error) {
 	os.Exit(1)
 }
 
-func printBasic(args ...any) {
-	fmt.Fprintln(os.Stdout, args...)
-}
-
-func (program *Program) printMtx(args ...any) {
-	
+func (program *Program) printMtx(args ...any) bool {
 	ms := time.Since(program.startTime).Milliseconds()
-	program.logMutex.Lock()
 
-	//defer: run this line when the function returns, not now
+	program.logMutex.Lock()
 	defer program.logMutex.Unlock()
+
+	if program.stopSim {
+		return false
+	}
 	fmt.Fprintln(os.Stdout, append([]any{ms}, args...)...)
+	return true
 }
+
 
 //learn to love defer: if err != nil {return} --> never unlock

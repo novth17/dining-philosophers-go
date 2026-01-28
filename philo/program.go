@@ -21,6 +21,7 @@ type Program struct {
 	mealsRequired int 
 
 	startTime time.Time
+	stopSim bool
 
 	// 	slice header
 	//  ├─ data ─────► [ Philo ][ Philo ][ Philo ]
@@ -30,6 +31,8 @@ type Program struct {
 	forks []sync.Mutex //slice of struct of fork mutexes
 
 	logMutex sync.Mutex
+	mealMutex sync.Mutex
+	wg         sync.WaitGroup
 	
 	//ctx context.Context // this is an interface, a shared signal says "program must stop now"
 }
