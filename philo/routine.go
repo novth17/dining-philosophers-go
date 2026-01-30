@@ -33,11 +33,9 @@ func (philo *Philo) eat(ctx context.Context) bool {
 		first, second = &program.forks[right], &program.forks[left]
 	}
 
-	//hold the fork
 	first.Lock()
 	program.printMtx(philo.id, "has taken a fork")
 
-	// single philosopher case
 	if program.numPhilos == 1 {
 		first.Unlock()
 		<-ctx.Done() 
@@ -46,8 +44,8 @@ func (philo *Philo) eat(ctx context.Context) bool {
 
 	second.Lock()
 
-    // Immediate check: Did we die while waiting for this lock?
-    if ctx.Err() != nil { //ctx is cancelled as program is dead
+    // Did we die while waiting for this lock?
+    if ctx.Err() != nil {
         second.Unlock()
         first.Unlock()
         return false
@@ -62,10 +60,8 @@ func (philo *Philo) eat(ctx context.Context) bool {
 
 	program.printMtx(philo.id, "is eating")
 
-	// --- ACTUALLY EAT (forks still held) ---
 	eatSuccess := philo.safeSleep(program.timeEat, ctx)
 
-	// --- release forks immediately after eating ---
 	second.Unlock()
 	first.Unlock()
 
@@ -86,8 +82,7 @@ func (philo *Philo) think(ctx context.Context) bool {
 		return philo.safeSleep(time.Millisecond, ctx)
 	}
 
-	// For odd numbers, calculate a "Rotation Delay" to avoid stealing forks
-	// The ideal time is (Eat * 2) - Sleep
+	// For odd numbers, calculate a "Rotation Delay" to avoid stealing 
 	thinkTime := (program.timeEat * 2) - program.timeSleep
 	if thinkTime < 0 {
 		thinkTime = 0
