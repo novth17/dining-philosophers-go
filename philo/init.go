@@ -8,31 +8,31 @@ import (
 func initProgram(program *Program, args []string) error {
 
 	var err	error
-	program.numPhilos, err = parsePositiveNumber(args[0])
+	program.numPhilos, err = parseValidNumber(args[0])
 	if err != nil {
 		return err
 	}
 
-	timeDieMs, err := parsePositiveNumber(args[1])
+	timeDieMs, err := parseValidNumber(args[1])
 	if err != nil {
 		return err
 	}
 	program.timeDie = msToDuration(timeDieMs)
 
-	timeEatMs, err := parsePositiveNumber(args[2])
+	timeEatMs, err := parseValidNumber(args[2])
 	if err != nil {
 		return err
 	}
 	program.timeEat = msToDuration(timeEatMs)
 
-	timeSleepMs, err := parsePositiveNumber(args[3])
+	timeSleepMs, err := parseValidNumber(args[3])
 	if err != nil {
 		return err
 	}
 	program.timeSleep = msToDuration(timeSleepMs)
 
 	if len(args) == 5 {
-		program.mealsRequired, err = parsePositiveNumber(args[4])
+		program.mealsRequired, err = parseValidNumber(args[4])
 		if err != nil {
 			return err
 		}

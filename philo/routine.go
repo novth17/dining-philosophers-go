@@ -45,6 +45,14 @@ func (philo *Philo) eat(ctx context.Context) bool {
 	}
 
 	second.Lock()
+
+    // Immediate check: Did we die while waiting for this lock?
+    if ctx.Err() != nil { //ctx is cancelled as program is dead
+        second.Unlock()
+        first.Unlock()
+        return false
+    }
+
 	program.printMtx(philo.id, "has taken a fork")
 
 	program.mealMutex.Lock()
