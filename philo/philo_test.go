@@ -31,7 +31,7 @@ func TestPhiloStarvation(t *testing.T) {
             args:          []string{"200", "800", "200", "200", "5"},
             shouldSurvive: true,
         },
-        // --- ADD THESE NEW CASES ---
+
         {
             name:          "Minimal Survival Slack",
             // 410ms life, 200ms eat, 200ms sleep. 
@@ -59,12 +59,18 @@ func TestPhiloStarvation(t *testing.T) {
             args:          []string{"199", "610", "200", "200"},
             shouldSurvive: true,
         },
+		// {
+        //     name:          "Large Number Of Philo Stress",
+		// 	// a very brave move 
+        //     args:          []string{"1000", "610", "200", "200", 50},
+        //     shouldSurvive: true,
+        // },
 		{
-		// Scenario: Eat is much longer than sleep.
-		// Forks are almost always occupied.
-		name:          "Heavy Eating Contention",
-		args:          []string{"3", "610", "300", "30"},
-		shouldSurvive: true,
+			// Scenario: Eat is much longer than sleep.
+			// Forks are almost always occupied.
+			name:          "Heavy Eating Contention",
+			args: []string{"3", "610", "300", "30"},
+			shouldSurvive: false,
 		},
 		{
 			// Scenario: Sleep is much longer than eat.
