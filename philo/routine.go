@@ -53,10 +53,10 @@ func (philo *Philo) eat(ctx context.Context) bool {
 
 	program.printMtx(philo.id, "has taken a fork")
 
-	program.mealMutex.Lock()
+	program.mealMu.Lock()
 	philo.timeLastMeal = time.Now()
 	philo.mealCount++
-	program.mealMutex.Unlock()
+	program.mealMu.Unlock()
 
 	program.printMtx(philo.id, "is eating")
 

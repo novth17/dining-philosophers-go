@@ -19,7 +19,7 @@ type Program struct {
 	timeSleep time.Duration
 	mealsRequired int 
 	startTime time.Time
-	stopSim bool
+	stopSim int32
 
 	// 	slice header
 	//  ├─ data ─────► [ Philo ][ Philo ][ Philo ]
@@ -28,10 +28,11 @@ type Program struct {
 	philos []Philo //slice of struct Philo
 	forks []sync.Mutex //slice of struct of fork mutexes
 
-	logMutex sync.Mutex
-	mealMutex sync.Mutex
+	logs      []string
+	logMu sync.Mutex
+	mealMu sync.Mutex
 	wg         sync.WaitGroup
-	
+
 }
 
 //this function assigns each args to the equivalent in the struct

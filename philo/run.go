@@ -25,8 +25,8 @@ func (program *Program) Run() {
     fmt.Println("--- Party's over! ---")
 
     if program.mealsRequired != -1 {
-        program.mealMutex.Lock()
-        defer program.mealMutex.Unlock()
+        program.mealMu.Lock()
+        defer program.mealMu.Unlock()
 
         fmt.Println("\n--- Final Meal Statistics ---")
         for i := 0; i < program.numPhilos; i++ {

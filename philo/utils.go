@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"time"
 	"runtime"
+	"time"
 )
 
 func msToDuration(ms int) time.Duration {
@@ -14,10 +14,10 @@ func msToDuration(ms int) time.Duration {
 func (program *Program) printMtx(args ...any) bool {
 	ms := time.Since(program.startTime).Milliseconds()
 
-	program.logMutex.Lock()
-	defer program.logMutex.Unlock()
+	program.logMu.Lock()
+	defer program.logMu.Unlock()
 
-	if program.stopSim {
+	if program.stopSim == 1 {
 		return false
 	}
 	fmt.Fprintln(os.Stdout, append([]any{ms}, args...)...)
@@ -28,3 +28,4 @@ func (program *Program) printCPUInfo() {
     fmt.Printf("Logical CPUs (Hardware): %d\n", runtime.NumCPU())
     fmt.Printf("Go Scheduler Parallelism (GOMAXPROCS): %d\n", runtime.GOMAXPROCS(0))
 }
+

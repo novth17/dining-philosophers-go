@@ -2,49 +2,46 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"time"
 )
 
 func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) {
     for {
-        // Stop monitoring if simulation already ended (ctx.Done() or cancel() called elsewhere)
         if ctx.Err() != nil {
             return
         }
 
         for i := 0; i < program.numPhilos; i++ {
-            philo := &program.philos[i]
-
-			if philo.isStarving() {
-				program.logMutex.Lock() 
-				program.stopSim = true
-				ms := time.Since(program.startTime).Milliseconds()
-				fmt.Printf("%d %d died\n", ms, philo.id)
-				program.logMutex.Unlock()
-				
-				cancel() 
-				return
-			}
-		}
+            if program.philos[i].isStarving() {
+                // 1. SIGNAL IMMEDIATELY
+                cancel() 
+                
+                // 2. LOG IT (Log internal logic will set stopSim = 1)
+                program.Log(program.philos[i].id, "died")
+                return
+            }
+        }
 
         if program.mealsRequired != -1 && program.checkAllFull() {
             cancel()
             return
         }
+        // Tightening this to 100-500us is good for 10ms timers
         time.Sleep(500 * time.Microsecond)
     }
 }
 
 func (philo *Philo) isStarving() bool {
-	philo.prog.mealMutex.Lock()
-	defer philo.prog.mealMutex.Unlock()
-	return time.Since(philo.timeLastMeal) > philo.prog.timeDie
+    philo.prog.mealMu.Lock()
+    defer philo.prog.mealMu.Unlock()
+    
+    // Use >= to be strict on the death timer
+    return time.Since(philo.timeLastMeal) >= philo.prog.timeDie
 }
 
 func (program *Program) checkAllFull() bool {
-    program.mealMutex.Lock()
-    defer program.mealMutex.Unlock()
+    program.mealMu.Lock()
+    defer program.mealMu.Unlock()
 
     fullPhilos := 0
     for i := 0; i < program.numPhilos; i++ {
