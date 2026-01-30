@@ -389,19 +389,20 @@ The project demonstrates Go's idiomatic error handling patterns:
 1. **Parse Errors** - Malformed input from `strconv`
    ```
    ./philo 5 800 abc 200
-   → "argument 3: 'abc': contains non-numeric characters"
+   → Error: "argument 3: 'abc': contains non-numeric characters"
    ```
 
 2. **Domain Errors** - Valid integers violating problem constraints
    ```
    ./philo 0 800 200 200
-   → "argument 1: '0': value must be strictly positive"
+   → Error: "argument 1: '0': value must be strictly positive"
    ```
 
 3. **System Errors** - Runtime issues (integer overflow, etc.)
+   Note: I tested Go on a 64-bit architecture MacOs, therefore, the default int type is an 64-bit signed integer.
    ```
-   ./philo 5 999999999999999999 200 200
-   → strconv.ErrRange
+   ./philo 5 9999999999999999999999 200 200
+   → Error: argument 2: '9999999999999999999999': is too large for an integer
    ```
 
 ### Error Wrapping
