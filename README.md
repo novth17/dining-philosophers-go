@@ -445,4 +445,3 @@ Built as part of learning Go's concurrency model. Inspired by the classic synchr
 
 **Author:** Hien Nguyen  
 **GitHub:** [novth17](https://github.com/novth17)  
-**Project:** [dining-philosophers-go](https://github.com/novth17/dining-philosophers-go)
