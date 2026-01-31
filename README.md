@@ -1,10 +1,13 @@
 # Dining philosophers problem - Solved In Go
+"To eat or not to eat... that is the synchronization problem"
 
 A concurrent simulation of the classic [Dining Philosophers Problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem) built in Go, demonstrating advanced concurrency patterns, deadlock prevention, and goroutine orchestration.
 
 ## 🎯 Overview
 
-This project simulates multiple philosophers running concurrently as goroutines, competing for shared resources (forks) protected by mutexes. Each philosopher cycles through three states:
+This project simulates multiple philosophers running concurrently as goroutines, competing for shared resources (forks) protected by mutexes. 
+Five Golang gophers, one table, classic concurrency!
+Each philosopher cycles through three states:
 
 - **Thinking** - Philosophical contemplation (variable duration)
 - **Eating** - Consuming spaghetti (requires 2 forks)
