@@ -1,0 +1,32 @@
+body {
+  font-family: sans-serif;
+}
+
+#philosophers {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.philo {
+  padding: 20px;
+  border-radius: 50%;
+  text-align: center;
+  width: 80px;
+  height: 80px;
+  line-height: 40px;
+  font-weight: bold;
+}
+
+.thinking { background: #ddd; }
+.eating   { background: #7bed9f; }
+.sleeping { background: #70a1ff; }
+.dead     { background: #ff6b6b; color: white; }
+
+#log {
+  background: #111;
+  color: #0f0;
+  padding: 10px;
+  height: 200px;
+  overflow-y: auto;
+}

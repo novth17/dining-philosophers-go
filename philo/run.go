@@ -3,10 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
+    "net/http"
 )
 
 func (program *Program) Run() {
     fmt.Println("--- Program Running.... ---")
+    http.Handle("/", http.FileServer(http.Dir("./web")))
 
     ctx, cancel := context.WithCancel(context.Background()) // empty context
     defer cancel()

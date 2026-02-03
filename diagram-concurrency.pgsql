@@ -27,3 +27,16 @@ waitGroup.Wait()
 all goroutines exited
    ↓
 process exits cleanly
+
+
+STREAM
+
+[ philosophers goroutines ]
+          |
+       events
+          |
+     monitor
+          |
+   event stream
+          |
+   frontend (read-only)
