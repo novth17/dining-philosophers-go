@@ -330,6 +330,13 @@ go test -race -v
 
 The race detector instruments every memory access to catch unsynchronized shared state mutations.
 
+**Run with test:**
+
+```bash
+make test
+```
+
+
 ## 📊 Performance Analysis
 
 ### Scheduler Introspection

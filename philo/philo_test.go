@@ -86,6 +86,12 @@ func TestPhiloStarvation(t *testing.T) {
 			args:          []string{"3", "390", "200", "50"},
 			shouldSurvive: false,
 		},
+
+		{
+			name:          "Stress test very close number",
+			args:          []string{"6", "315", "100", "200", "50"},
+			shouldSurvive: true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -107,7 +113,7 @@ func TestPhiloStarvation(t *testing.T) {
 				select {
 				case <-done:
 					// OK, simulation finished naturally
-				case <-time.After(5 * time.Second):
+				case <-time.After(20 * time.Second):
 					t.Fatal("simulation did not finish in time")
 				}
 
