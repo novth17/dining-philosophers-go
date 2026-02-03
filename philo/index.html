@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Philo500</title>
+    <style>
+        body { background: #111; color: white; margin: 0; display: flex; flex-direction: column; align-items: center; font-family: sans-serif; }
+        canvas { margin-top: 20px; border: 1px solid #333; }
+    </style>
+</head>
+<body>
+    <h1>Dining Philosophers Visualizer</h1>
+    <canvas id="canvas" width="800" height="800"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const socket = new WebSocket('ws://localhost:8080/ws');
+        socket.binaryType = "arraybuffer";
+
+        socket.onmessage = (event) => {
+            const data = new Uint8Array(event.data);
+            ctx.clearRect(0, 0, 800, 800);
+            data.forEach((state, i) => {
+                const angle = (i / data.length) * Math.PI * 2;
+                const x = 400 + 350 * Math.cos(angle);
+                const y = 400 + 350 * Math.sin(angle);
+                // 0: Think (Gray), 1: Eat (Green), 2: Sleep (Blue), 3: Dead (Red)
+                ctx.fillStyle = ["#444", "#00FF00", "#0088FF", "#FF0000"][state];
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        };
+    </script>
+</body>
+</html>

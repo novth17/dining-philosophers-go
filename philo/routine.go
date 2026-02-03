@@ -3,21 +3,22 @@ package main
 import (
 	"context"
 	"sync"
+	"sync/atomic"
 	"time"
 )
 
-func (philo *Philo) routine(ctx context.Context) {  
-	program := philo.prog
+func (philo *Philo) routine(ctx context.Context) {
+	//defer philo.prog.wg.Done()
 
-	if (philo.id % 2 == 0) {
-		philo.think(ctx);
-		philo.safeSleep(program.timeEat / 2, ctx);
+	if philo.id%2 == 0 {
+		atomic.StoreInt32(&philo.State, THINKING)
+		time.Sleep(time.Millisecond)
 	}
 
 	for {
-		if !philo.eat(ctx) || !philo.sleep(ctx) || !philo.think(ctx) {
-			return
-		}
+		if !philo.eat(ctx) { return }
+		if !philo.sleep(ctx) { return }
+		if !philo.think(ctx) { return }
 	}
 }
 
@@ -38,18 +39,16 @@ func (philo *Philo) eat(ctx context.Context) bool {
 
 	if program.numPhilos == 1 {
 		first.Unlock()
-		<-ctx.Done() 
+		<-ctx.Done()
 		return false
 	}
 
 	second.Lock()
-
-    // Did we die while waiting for this lock?
-    if ctx.Err() != nil {
-        second.Unlock()
-        first.Unlock()
-        return false
-    }
+	if ctx.Err() != nil {
+		second.Unlock()
+		first.Unlock()
+		return false
+	}
 
 	program.printMtx(philo.id, "has taken a fork")
 
@@ -58,49 +57,37 @@ func (philo *Philo) eat(ctx context.Context) bool {
 	philo.mealCount++
 	program.mealMu.Unlock()
 
+	atomic.StoreInt32(&philo.State, EATING)
 	program.printMtx(philo.id, "is eating")
-
 	eatSuccess := philo.safeSleep(program.timeEat, ctx)
 
 	second.Unlock()
 	first.Unlock()
-
 	return eatSuccess
 }
 
 func (philo *Philo) sleep(ctx context.Context) bool {
-	program := philo.prog
-	program.printMtx(philo.id, "is sleeping")
-	return philo.safeSleep(program.timeSleep, ctx)
+	atomic.StoreInt32(&philo.State, SLEEPING)
+	philo.prog.printMtx(philo.id, "is sleeping")
+	return philo.safeSleep(philo.prog.timeSleep, ctx)
 }
 
 func (philo *Philo) think(ctx context.Context) bool {
-	program := philo.prog
-	program.printMtx(philo.id, "is thinking")
-
-	if program.numPhilos%2 == 0 {
-		return philo.safeSleep(time.Millisecond, ctx)
+	atomic.StoreInt32(&philo.State, THINKING)
+	philo.prog.printMtx(philo.id, "is thinking")
+	if philo.prog.numPhilos%2 != 0 {
+		time.Sleep(time.Millisecond)
 	}
-
-	// For odd numbers, calculate a "Rotation Delay" to avoid stealing 
-	thinkTime := (program.timeEat * 2) - program.timeSleep
-	if thinkTime < 0 {
-		thinkTime = 0
-	}
-
-	// Never think for more than 20% of remaining sad life.
-	if thinkTime > program.timeDie / 5 {
-		thinkTime = program.timeDie / 5
-	}
-
-	return philo.safeSleep(thinkTime, ctx)
+	return true
 }
 
-func (philo *Philo) safeSleep(dur time.Duration, ctx context.Context) bool {
-	select {
-	case <-time.After(dur):
-		return true
-	case <-ctx.Done():
-		return false
+func (philo *Philo) safeSleep(duration time.Duration, ctx context.Context) bool {
+	start := time.Now()
+	for time.Since(start) < duration {
+		if ctx.Err() != nil {
+			return false
+		}
+		time.Sleep(time.Millisecond)
 	}
+	return true
 }

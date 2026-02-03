@@ -16,7 +16,7 @@ func (program *Program) Run() {
     for i := 0; i < program.numPhilos; i++ {
         program.wg.Add(1)
         go func(p *Philo) {
-            defer program.wg.Done()
+           defer program.wg.Done()
             p.routine(ctx)
         }(&program.philos[i])
     }
