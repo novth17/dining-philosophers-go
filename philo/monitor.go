@@ -2,31 +2,36 @@ package main
 
 import (
 	"context"
-	"sync/atomic"
+	"fmt"
 	"time"
+    "sync/atomic"
 )
 
 func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) {
-	for {
-		if ctx.Err() != nil {
-			return
-		}
+    for {
+        if ctx.Err() != nil {
+            return
+        }
+        for i := 0; i < program.numPhilos; i++ {
+            if program.philos[i].isStarving() {
+                program.logMu.Lock()
+                if atomic.LoadInt32(&program.stopSim) == 0 {
+                    atomic.StoreInt32(&program.stopSim, 1)
+                    atomic.StoreInt32(&program.philos[i].State, DEAD) // For Visualizer
+                    fmt.Printf("%d %d died\n", time.Since(program.startTime).Milliseconds(), program.philos[i].id)
+                }
+                cancel()
+                program.logMu.Unlock()
+                return
+            }
+        }
 
-		for i := 0; i < program.numPhilos; i++ {
-			if program.philos[i].isStarving() {
-				atomic.StoreInt32(&program.philos[i].State, DEAD)
-				cancel()
-				program.Log(program.philos[i].id, "died")
-				return
-			}
-		}
-
-		if program.mealsRequired != -1 && program.checkAllFull() {
-			cancel()
-			return
-		}
-		time.Sleep(500 * time.Microsecond)
-	}
+        if program.mealsRequired != -1 && program.checkAllFull() {
+            cancel()
+            return
+        }
+        time.Sleep(500 * time.Microsecond)
+    }
 }
 
 func (philo *Philo) isStarving() bool {

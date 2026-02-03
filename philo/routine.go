@@ -6,20 +6,42 @@ import (
 	"sync/atomic"
 	"time"
 )
-
 func (philo *Philo) routine(ctx context.Context) {
-	//defer philo.prog.wg.Done()
+    // Initial delay for even IDs to prevent immediate deadlock
+    if philo.id%2 == 0 {
+        time.Sleep(time.Millisecond)
+    }
 
-	if philo.id%2 == 0 {
-		atomic.StoreInt32(&philo.State, THINKING)
-		time.Sleep(time.Millisecond)
+    for {
+        if !philo.eat(ctx) { return }
+        if !philo.sleep(ctx) { return }
+        if !philo.think(ctx) { return }
+    }
+}
+
+func (philo *Philo) think(ctx context.Context) bool {
+	atomic.StoreInt32(&philo.State, THINKING)
+	if !philo.prog.printMtx(philo.id, "is thinking") {
+		return false
 	}
 
-	for {
-		if !philo.eat(ctx) { return }
-		if !philo.sleep(ctx) { return }
-		if !philo.think(ctx) { return }
+
+	if philo.prog.numPhilos%2 != 0 {
+		// Formula: (time_to_eat * 2) - time_to_sleep. This ensures we wait long enough for the other pair to finish.
+		thinkTime := (philo.prog.timeEat * 2) - philo.prog.timeSleep
+		
+		// But don't think so long that YOU die. 
+		// Usually, a small 10-20ms gap is enough to fix the race.
+		if thinkTime < 0 {
+			thinkTime = 10 * time.Millisecond
+		} else {
+			thinkTime = thinkTime / 2 // Start with half the gap
+		}
+		
+		return philo.safeSleep(thinkTime, ctx)
 	}
+
+	return true
 }
 
 func (philo *Philo) eat(ctx context.Context) bool {
@@ -72,14 +94,6 @@ func (philo *Philo) sleep(ctx context.Context) bool {
 	return philo.safeSleep(philo.prog.timeSleep, ctx)
 }
 
-func (philo *Philo) think(ctx context.Context) bool {
-	atomic.StoreInt32(&philo.State, THINKING)
-	philo.prog.printMtx(philo.id, "is thinking")
-	if philo.prog.numPhilos%2 != 0 {
-		time.Sleep(time.Millisecond)
-	}
-	return true
-}
 
 func (philo *Philo) safeSleep(duration time.Duration, ctx context.Context) bool {
 	start := time.Now()

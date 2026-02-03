@@ -4,24 +4,29 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"sync/atomic"
 	"time"
 )
 
 func msToDuration(ms int) time.Duration {
 	return time.Duration(ms) * time.Millisecond
 }
-
 func (program *Program) printMtx(args ...any) bool {
-	ms := time.Since(program.startTime).Milliseconds()
+    if atomic.LoadInt32(&program.stopSim) == 1 {
+        return false
+    }
 
-	program.logMu.Lock()
-	defer program.logMu.Unlock()
+    ms := time.Since(program.startTime).Milliseconds()
 
-	if program.stopSim == 1 {
-		return false
-	}
-	fmt.Fprintln(os.Stdout, append([]any{ms}, args...)...)
-	return true
+    program.logMu.Lock()
+    defer program.logMu.Unlock()
+
+    if program.stopSim == 1 {
+        return false
+    }
+    
+    fmt.Fprintln(os.Stdout, append([]any{ms}, args...)...)
+    return true
 }
 
 func (program *Program) printCPUInfo() {

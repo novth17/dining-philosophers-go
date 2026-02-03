@@ -17,4 +17,4 @@ run-sched: build
 	GODEBUG=schedtrace=1000 ./$(BIN)
 
 test:
-	go test -v -race $(BIN)
+	go test -v -count=1 $(PKG)
