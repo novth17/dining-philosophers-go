@@ -33,22 +33,28 @@ func (philo *Philo) emitState(state string) {
 }
 
 func (program *Program) eventsHandler(w http.ResponseWriter, r *http.Request) {
-	// 1️⃣ Tell the browser: this is SSE
+	// Tell the browser: this is SSE
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("Connection", "keep-alive")
 
-	// 2️⃣ Make sure streaming is supported
+
+	// Trigger the simulation to start when the first client connects
+    program.once.Do(func() {
+        close(program.StartSignal)
+    })
+
+	// Make sure streaming is supported
 	flusher, ok := w.(http.Flusher)
 	if !ok {
 		http.Error(w, "Streaming unsupported", http.StatusInternalServerError)
 		return
 	}
 
-	// 3️⃣ Stop streaming when client disconnects
+	// Stop streaming when client disconnects
 	ctx := r.Context()
 
-	// 4️⃣ Forward events forever
+	// Forward events forever
 	for {
 		select {
 		case <-ctx.Done():

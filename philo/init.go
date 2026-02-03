@@ -2,7 +2,7 @@ package main
 
 import (
 	"sync"
-	"time"
+	//"time"
 )
 
 func initProgram(program *Program, args []string) error {
@@ -39,9 +39,10 @@ func initProgram(program *Program, args []string) error {
 	} else {
 		program.mealsRequired = -1
 	}
-	program.startTime = time.Now()
+	//program.startTime = time.Now() - start in run
 	program.Events = make(chan Event, 100)
 	program.forks = make([]sync.Mutex, program.numPhilos)
+	program.StartSignal = make(chan struct{})
 
 	if err := initPhilo(program); err != nil {
 		return err
@@ -57,7 +58,7 @@ func initPhilo(program *Program) error {
 		program.philos[i] = Philo{
 			id: i + 1,
 			prog: program,
-			timeLastMeal: time.Now(),
+			//timeLastMeal: time.Now(),
 			mealCount: 0,
 		}
 	}

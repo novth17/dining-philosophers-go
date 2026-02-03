@@ -22,15 +22,4 @@ body {
 .eating   { background: #7bed9f; }
 .sleeping { background: #70a1ff; }
 .dead     { background: #ff6b6b; color: white; }
-
-/* #log {
-  background: #111;
-  color: #0f0;
-  padding: 10px;
-  height: 200px;
-  overflow-y: auto;
-} */
-
-.hungry {
-  background: orange;
-}
+.hungry   { background: orange; }

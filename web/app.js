@@ -4,15 +4,6 @@ const log = document.getElementById("log");
 const NUM_PHILOS = 5;
 const philosophers = {};
 
-// for (let i = 1; i <= NUM_PHILOS; i++) {
-//   const el = document.createElement("div");
-//   el.className = "philo thinking";
-//   el.innerText = `Philo ${i}`;
-//   container.appendChild(el);
-
-//   philosophers[i] = el;
-// }
-
 const philos = {};
 const philosDiv = document.getElementById("philosophers");
 
@@ -46,6 +37,11 @@ const source = new EventSource("/events");
 
 source.onmessage = (e) => {
   const ev = JSON.parse(e.data);
+
+  if (ev.event === "simulation_start") {
+    document.body.classList.add("simulation-running");
+    return;
+  }
 
   if (ev.state && ev.philo !== undefined) {
     setState(ev.philo, ev.state, ev.time);
