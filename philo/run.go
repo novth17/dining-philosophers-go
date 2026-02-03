@@ -8,7 +8,12 @@ import (
 
 func (program *Program) Run() {
     fmt.Println("--- Program Running.... ---")
-    http.Handle("/", http.FileServer(http.Dir("./web")))
+
+    mux := http.NewServeMux()
+    mux.Handle("/", http.FileServer(http.Dir("./web")))
+    mux.HandleFunc("/events", program.eventsHandler)
+
+    go http.ListenAndServe(":8080", mux)
 
     ctx, cancel := context.WithCancel(context.Background()) // empty context
     defer cancel()

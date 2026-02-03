@@ -40,6 +40,7 @@ func initProgram(program *Program, args []string) error {
 		program.mealsRequired = -1
 	}
 	program.startTime = time.Now()
+	program.Events = make(chan Event, 100)
 	program.forks = make([]sync.Mutex, program.numPhilos)
 
 	if err := initPhilo(program); err != nil {

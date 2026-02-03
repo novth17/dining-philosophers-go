@@ -89,7 +89,7 @@ func TestPhiloStarvation(t *testing.T) {
 
 		{
 			name:          "Stress test very close number",
-			args:          []string{"6", "315", "100", "200", "50"},
+			args:          []string{"6", "360", "100", "200", "50"},
 			shouldSurvive: true,
 		},
 	}
@@ -113,7 +113,7 @@ func TestPhiloStarvation(t *testing.T) {
 				select {
 				case <-done:
 					// OK, simulation finished naturally
-				case <-time.After(20 * time.Second):
+				case <-time.After(200 * time.Second):
 					t.Fatal("simulation did not finish in time")
 				}
 

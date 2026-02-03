@@ -4,10 +4,12 @@ import (
 	"context"
 	"sync"
 	"time"
+	
 )
 
 func (philo *Philo) routine(ctx context.Context) {  
 	program := philo.prog
+
 
 	if (philo.id % 2 == 0) {
 		philo.think(ctx);
@@ -20,7 +22,6 @@ func (philo *Philo) routine(ctx context.Context) {
 		}
 	}
 }
-
 func (philo *Philo) eat(ctx context.Context) bool {
 	program := philo.prog
 	left := philo.id - 1
@@ -38,20 +39,22 @@ func (philo *Philo) eat(ctx context.Context) bool {
 
 	if program.numPhilos == 1 {
 		first.Unlock()
-		<-ctx.Done() 
+		<-ctx.Done()
 		return false
 	}
 
 	second.Lock()
 
-    // Did we die while waiting for this lock?
-    if ctx.Err() != nil {
-        second.Unlock()
-        first.Unlock()
-        return false
-    }
+	if ctx.Err() != nil {
+		second.Unlock()
+		first.Unlock()
+		return false
+	}
 
 	program.printMtx(philo.id, "has taken a fork")
+
+	// 🔵 ENTER EATING STATE (authoritative moment)
+	philo.emitState("eating")
 
 	program.mealMu.Lock()
 	philo.timeLastMeal = time.Now()
@@ -70,12 +73,18 @@ func (philo *Philo) eat(ctx context.Context) bool {
 
 func (philo *Philo) sleep(ctx context.Context) bool {
 	program := philo.prog
+
+	philo.emitState("sleeping")
 	program.printMtx(philo.id, "is sleeping")
+
 	return philo.safeSleep(program.timeSleep, ctx)
 }
 
+
 func (philo *Philo) think(ctx context.Context) bool {
 	program := philo.prog
+
+	philo.emitState("thinking")
 	program.printMtx(philo.id, "is thinking")
 
 	if program.numPhilos%2 == 0 {

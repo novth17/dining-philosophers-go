@@ -33,6 +33,8 @@ type Program struct {
 	mealMu sync.Mutex
 	wg         sync.WaitGroup
 
+	//for frontend
+	Events	chan Event
 }
 
 //this function assigns each args to the equivalent in the struct
@@ -45,4 +47,8 @@ func NewProgram(args []string) (*Program, error) {
 		return nil, err
 	}
 	return &program, nil
+}
+
+func (program *Program) Now() int64 {
+	return time.Since(program.startTime).Milliseconds()
 }
