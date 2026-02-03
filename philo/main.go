@@ -1,4 +1,5 @@
-package main //all files in this folder belong to the same exe program
+package main
+
 import (
 	"os"
 )
