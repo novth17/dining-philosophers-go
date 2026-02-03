@@ -45,13 +45,14 @@ func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) 
                 program.logMu.Unlock()
                 return
             }
+        }
 
         if program.mealsRequired != -1 && program.checkAllFull() {
             cancel()
             return
         }
         time.Sleep(500 * time.Microsecond)
-        }
+        
     }
 }
 
