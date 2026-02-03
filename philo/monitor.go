@@ -3,7 +3,30 @@ package main
 import (
 	"context"
 	"time"
+    "fmt"
 )
+
+// func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) {
+//     for {
+//         if ctx.Err() != nil {
+//             return
+//         }
+
+//         for i := 0; i < program.numPhilos; i++ {
+//             if program.philos[i].isStarving() {
+//                 cancel() 
+//                 program.Log(program.philos[i].id, "died")
+//                 return
+//             }
+//         }
+
+//         if program.mealsRequired != -1 && program.checkAllFull() {
+//             cancel()
+//             return
+//         }
+//         time.Sleep(500 * time.Microsecond)
+//     }
+// }
 
 func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) {
     for {
@@ -11,19 +34,24 @@ func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) 
             return
         }
 
+
         for i := 0; i < program.numPhilos; i++ {
             if program.philos[i].isStarving() {
-                cancel() 
-                program.Log(program.philos[i].id, "died")
+                // LOCK the logs so nothing else prints after death
+                program.logMu.Lock()
+                program.stopSim = 1
+                fmt.Printf("%d %d died\n", time.Since(program.startTime).Milliseconds(), program.philos[i].id)
+                cancel()
+                program.logMu.Unlock()
                 return
             }
-        }
 
         if program.mealsRequired != -1 && program.checkAllFull() {
             cancel()
             return
         }
         time.Sleep(500 * time.Microsecond)
+        }
     }
 }
 
