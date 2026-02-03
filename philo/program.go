@@ -4,6 +4,7 @@ package main
 import (
 	"sync"
 	"time"
+	"net/http"
 )
 type Philo struct {
 	id int
@@ -35,9 +36,11 @@ type Program struct {
 
 	//for frontend
 	Events	chan Event
-
 	StartSignal chan struct{} // closed when the first client connects
     once        sync.Once //ensures we only close the channel once
+
+	//for testing
+	Server      *http.Server
 }
 
 //this function assigns each args to the equivalent in the struct

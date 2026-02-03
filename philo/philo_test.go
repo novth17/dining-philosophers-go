@@ -96,17 +96,25 @@ func TestPhiloStarvation(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			program, err := NewProgram(tt.args)
-			if err != nil {
-				t.Fatalf("init failed: %v", err)
+    	program, _ := NewProgram(tt.args)
+		done := make(chan struct{})
+    
+		// 1. Force the start signal so the test doesn't hang
+		program.once.Do(func() {
+			close(program.StartSignal)
+		})
+
+		// 2. Shut down the server at the end of EACH sub-test
+		defer func() {
+			if program.Server != nil {
+				program.Server.Close() // Frees the port immediately
 			}
+		}()
 
-			done := make(chan struct{})
-
-			go func() {
-				program.Run()
-				close(done)
-			}()
+		go func() {
+			program.Run(":0") // Use port 0 for a random available port
+			close(done)
+		}()
 
 			// ---- CASE 1: Meals required → wait for completion ----
 			if program.mealsRequired != -1 {

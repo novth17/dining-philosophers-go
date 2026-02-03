@@ -53,7 +53,6 @@ func (philo *Philo) eat(ctx context.Context) bool {
 
 	program.printMtx(philo.id, "has taken a fork")
 
-	// 🔵 ENTER EATING STATE (authoritative moment)
 	philo.emitState("eating")
 
 	program.mealMu.Lock()

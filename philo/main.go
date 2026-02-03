@@ -16,6 +16,6 @@ func main() {
 	if err != nil {
 		fatal(err)
 	}
-	program.Run()
+	program.Run(":8080")
 	program.printCPUInfo()
 }

@@ -7,16 +7,30 @@ import (
 	"time"
 )
 
-func (program *Program) Run() {
+func (program *Program) Run(addr string) {
     fmt.Println("--- Program Running.... ---")
 
     mux := http.NewServeMux()
     mux.Handle("/", http.FileServer(http.Dir("./web")))
     mux.HandleFunc("/events", program.eventsHandler)
 
-    // 1. Start the server in a goroutine so it doesn't block this function
+    // Create the server instance
+    program.Server = &http.Server{
+        Addr:    addr,
+        Handler: mux,
+    }
+
+    // // 1. Start the server in a goroutine so it doesn't block this function
+    // go func() {
+    //     if err := http.ListenAndServe(":8080", mux); err != nil {
+    //         fmt.Printf("Server failed: %v\n", err)
+    //     }
+    // }()
+
+
     go func() {
-        if err := http.ListenAndServe(":8080", mux); err != nil {
+        // Use the instance instead of the package-level ListenAndServe
+        if err := program.Server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
             fmt.Printf("Server failed: %v\n", err)
         }
     }()
