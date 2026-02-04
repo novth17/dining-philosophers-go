@@ -19,7 +19,7 @@ The simulation must avoid deadlocks, prevent data races, and guarantee clean gor
 
 ### Classic Dining Philosophers Problem
 
-The [original problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem), proposed by Edsger Dijkstra in 1965, explores resource contention and deadlock in concurrent systems. Philosophers sit at a round table with one fork between each pair, and they must acquire both neighboring forks to eat.
+The [original problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem) explores resource contention and deadlock in concurrent systems. Philosophers sit at a round table with one fork between each pair, and they must acquire both neighboring forks to eat.
 
 ### This Implementation: A Survival Simulation
 
@@ -224,7 +224,7 @@ philo/
 
 ### Deadlock Prevention: Resource Hierarchy
 
-The simulation implements **Dijkstra's Solution** - philosophers acquire forks in a strict order based on fork ID to break circular wait conditions:
+Philosophers acquire forks in a strict order based on fork ID to break circular wait conditions:
 
 ```go
 // Even-numbered philosophers: pick left fork first
