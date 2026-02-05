@@ -1,5 +1,5 @@
 # Dining philosophers problem - Solved In Go
-"To eat or not to eat... that is the synchronization problem"
+"To eat or not to eat... that is the synchronization problem".
 
 A concurrent simulation of the classic [Dining Philosophers Problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem) built in Go, demonstrating advanced concurrency patterns, deadlock prevention, and goroutine orchestration.
 
