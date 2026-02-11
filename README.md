@@ -11,7 +11,7 @@ Each philosopher cycles through three states:
 
 - **Thinking** - Philosophical contemplation (variable duration)
 - **Eating** - Consuming spaghetti (requires 2 forks)
-- **Sleeping** - Resting after a meal
+- **Sleeping** - Resting
 
 The simulation must avoid deadlocks, prevent data races, and guarantee clean goroutine shutdown while detecting starvation scenarios.
 
