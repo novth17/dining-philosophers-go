@@ -11,85 +11,85 @@ func TestPhiloStarvation(t *testing.T) {
 		args          []string
 		shouldSurvive bool
 	}{
-		// {
-        //     name:          "Standard Success",
-        //     args:          []string{"5", "800", "200", "200", "7"},
-        //     shouldSurvive: true,
-        // },
-        // {
-        //     name:          "Instant Death",
-        //     args:          []string{"5", "10", "200", "200"},
-        //     shouldSurvive: false,
-        // },
-        // {
-        //     name:          "One Philosopher Fails",
-        //     args:          []string{"1", "800", "200", "200"},
-        //     shouldSurvive: false,
-        // },
-        // {
-        //     name:          "Large Scale Survival",
-        //     args:          []string{"200", "800", "200", "200", "5"},
-        //     shouldSurvive: true,
-        // },
+		{
+            name:          "Standard Success",
+            args:          []string{"5", "800", "200", "200", "7"},
+            shouldSurvive: true,
+        },
+        {
+            name:          "Instant Death",
+            args:          []string{"5", "10", "200", "200"},
+            shouldSurvive: false,
+        },
+        {
+            name:          "One Philosopher Fails",
+            args:          []string{"1", "800", "200", "200"},
+            shouldSurvive: false,
+        },
+        {
+            name:          "Large Scale Survival",
+            args:          []string{"200", "800", "200", "200", "5"},
+            shouldSurvive: true,
+        },
 
-        // {
-        //     name:          "Minimal Survival Slack",
-        //     // 410ms life, 200ms eat, 200ms sleep. 
-        //     // Only 10ms of "thinking" time allowed. Catches slow mutex logic.
-        //     args:          []string{"5", "610", "200", "200"},
-        //     shouldSurvive: true, 
-        // },
-        // {
-        //     name:          "The Fairness Trap (Odd Number)",
-        //     // 3 philos. If 1 and 2 keep eating, 3 will starve. 
-        //     // This tests if fork-picking logic allows everyone a turn.
-        //     args:          []string{"3", "610", "200", "200"},
-        //     shouldSurvive: true,
-        // },
-        // {
-        //     name:          "Immediate Stop on Meals",
-        //     // Everyone only eats once. Program should exit immediately.
-        //     args:          []string{"5", "800", "200", "200", "1"},
-        //     shouldSurvive: true,
-        // },
-        // {
-        //     name:          "High Contention Stress",
-        //     // 199 is a lot of goroutines fighting for forks. 
-        //     // Best case for catching Data Races with go test -race.
-        //     args:          []string{"199", "610", "200", "200"},
-        //     shouldSurvive: true,
-        // },
-		// {
-		// 	// Scenario: Eat is much longer than sleep.
-		// 	// Forks are almost always occupied.
-		// 	name:          "Heavy Eating Contention",
-		// 	args: []string{"3", "610", "300", "30"},
-		// 	shouldSurvive: false,
-		// },
-		// {
-		// 	// Scenario: Sleep is much longer than eat.
-		// 	// Tests if philos wake up and sync-clash for forks.
-		// 	name:          "Long Sleep Lazy Philo",
-		// 	args:          []string{"5", "800", "50", "600"},
-		// 	shouldSurvive: true,
-		// },
-		// {
-		// 	// Scenario: The "3x" Rule test. 
-		// 	// If die < 2*eat, an odd number will likely fail.
-		// 	name:          "Odd Number Math Fail",
-		// 	args:          []string{"3", "390", "200", "50"},
-		// 	shouldSurvive: false,
-		// },
+        {
+            name:          "Minimal Survival Slack",
+            // 410ms life, 200ms eat, 200ms sleep. 
+            // Only 10ms of "thinking" time allowed. Catches slow mutex logic.
+            args:          []string{"5", "610", "200", "200"},
+            shouldSurvive: true, 
+        },
+        {
+            name:          "The Fairness Trap (Odd Number)",
+            // 3 philos. If 1 and 2 keep eating, 3 will starve. 
+            // This tests if fork-picking logic allows everyone a turn.
+            args:          []string{"3", "610", "200", "200"},
+            shouldSurvive: true,
+        },
+        {
+            name:          "Immediate Stop on Meals",
+            // Everyone only eats once. Program should exit immediately.
+            args:          []string{"5", "800", "200", "200", "1"},
+            shouldSurvive: true,
+        },
+        {
+            name:          "High Contention Stress",
+            // 199 is a lot of goroutines fighting for forks. 
+            // Best case for catching Data Races with go test -race.
+            args:          []string{"199", "610", "200", "200"},
+            shouldSurvive: true,
+        },
+		{
+			// Scenario: Eat is much longer than sleep.
+			// Forks are almost always occupied.
+			name:          "Heavy Eating Contention",
+			args: []string{"3", "610", "300", "30"},
+			shouldSurvive: false,
+		},
+		{
+			// Scenario: Sleep is much longer than eat.
+			// Tests if philos wake up and sync-clash for forks.
+			name:          "Long Sleep Lazy Philo",
+			args:          []string{"5", "800", "50", "600"},
+			shouldSurvive: true,
+		},
+		{
+			// Scenario: The "3x" Rule test. 
+			// If die < 2*eat, an odd number will likely fail.
+			name:          "Odd Number Math Fail",
+			args:          []string{"3", "390", "200", "50"},
+			shouldSurvive: false,
+		},
 
-		// {
-		// 	name:          "Stress test very close number",
-		// 	args:          []string{"6", "320", "100", "200", "50"},
-		// 	shouldSurvive: true,
-		// },
+		{
+			name:          "Stress test very close number",
+			args:          []string{"6", "320", "100", "200", "50"},
+			shouldSurvive: true,
+		},
 		{
             name:          "Large Number Of Philo Stress",
 			// a very brave move 
-            args:          []string{"10000", "800", "200", "200", "7"},
+            args:          []string{"10000", "800", "200", "200", "1"},
             shouldSurvive: true,
         },
 	}

@@ -7,6 +7,8 @@ import (
 	"sync/atomic"
 	"time"
 )
+
+//improvement: considering logger channel, lock and unlock printing can cause some contention. how oftern you are printing
 func (program *Program) printMtx(id int, action string) bool {
     // Fast-path: check stopSim WITHOUT locking
     if atomic.LoadInt32(&program.stopSim) == 1 {
