@@ -45,6 +45,9 @@ func (philo *Philo) eat(ctx context.Context) bool {
 	second.Lock()
 
     // Did we die while waiting for this lock?
+	//Because sync.Mutex is not cancellable.
+	// If you waited long for second fork
+	// And cancellation happened during that wait
     if ctx.Err() != nil {
         second.Unlock()
         first.Unlock()
@@ -53,14 +56,21 @@ func (philo *Philo) eat(ctx context.Context) bool {
 
 	program.printMtx(philo.id, "has taken a fork")
 
+	// mark meal start (for starvation logic)
 	program.mealMu.Lock()
 	philo.timeLastMeal = time.Now()
-	philo.mealCount++
 	program.mealMu.Unlock()
 
 	program.printMtx(philo.id, "is eating")
 
 	eatSuccess := philo.safeSleep(program.timeEat, ctx)
+
+	// only count completed meals
+	if eatSuccess {
+		program.mealMu.Lock()
+		philo.mealCount++
+		program.mealMu.Unlock()
+	}
 
 	second.Unlock()
 	first.Unlock()

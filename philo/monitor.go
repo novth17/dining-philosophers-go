@@ -6,28 +6,6 @@ import (
     "fmt"
 )
 
-// func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) {
-//     for {
-//         if ctx.Err() != nil {
-//             return
-//         }
-
-//         for i := 0; i < program.numPhilos; i++ {
-//             if program.philos[i].isStarving() {
-//                 cancel() 
-//                 program.Log(program.philos[i].id, "died")
-//                 return
-//             }
-//         }
-
-//         if program.mealsRequired != -1 && program.checkAllFull() {
-//             cancel()
-//             return
-//         }
-//         time.Sleep(500 * time.Microsecond)
-//     }
-// }
-
 func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) {
     for {
         if ctx.Err() != nil {
