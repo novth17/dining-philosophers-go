@@ -8,7 +8,7 @@ import (
 func (program *Program) Run() {
     fmt.Println("--- Program Running.... ---")
 
-    ctx, cancel := context.WithCancel(context.Background()) // empty context
+    ctx, cancel := context.WithCancel(context.Background())
     defer cancel()
 
 	go program.monitor(ctx, cancel)
