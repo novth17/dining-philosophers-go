@@ -107,10 +107,17 @@ func (philo *Philo) think(ctx context.Context) bool {
 }
 
 func (philo *Philo) safeSleep(dur time.Duration, ctx context.Context) bool {
-	select {
-	case <-time.After(dur):
-		return true
-	case <-ctx.Done():
-		return false
-	}
+    // NewTimer is more efficient for high-frequency use
+    timer := time.NewTimer(dur)
+    
+    // Ensure the timer is stopped to free resources
+    defer timer.Stop()
+
+    select {
+    case <-timer.C:
+        return true
+    case <-ctx.Done():
+        // If the context is cancelled, we stop sleeping immediately
+        return false
+    }
 }

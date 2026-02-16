@@ -1,4 +1,3 @@
-// ./philo numPhilos timeDie timeEat timeSleep [mealsRequired]
 package main
 
 import (

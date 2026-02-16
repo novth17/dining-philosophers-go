@@ -4,24 +4,31 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"sync/atomic"
 	"time"
 )
+func (program *Program) printMtx(id int, action string) bool {
+    // Fast-path: check stopSim WITHOUT locking
+    if atomic.LoadInt32(&program.stopSim) == 1 {
+        return false
+    }
 
-func msToDuration(ms int) time.Duration {
-	return time.Duration(ms) * time.Millisecond
-}
+    program.logMu.Lock()
+    defer program.logMu.Unlock()
 
-func (program *Program) printMtx(args ...any) bool {
-	ms := time.Since(program.startTime).Milliseconds()
+    // Re-check after locking to prevent race conditions
+    if program.stopSim == 1 {
+        return false
+    }
 
-	program.logMu.Lock()
-	defer program.logMu.Unlock()
+    timestamp := time.Since(program.startTime).Milliseconds()
+    fmt.Fprintf(os.Stdout, "%d %d %s\n", timestamp, id, action)
 
-	if program.stopSim == 1 {
-		return false
-	}
-	fmt.Fprintln(os.Stdout, append([]any{ms}, args...)...)
-	return true
+    // If this log is a death, we stop the sim while holding the lock
+    if action == "died" {
+        atomic.StoreInt32(&program.stopSim, 1)
+    }
+    return true
 }
 
 func (program *Program) printCPUInfo() {
@@ -29,3 +36,6 @@ func (program *Program) printCPUInfo() {
     fmt.Printf("Go Scheduler Parallelism (GOMAXPROCS): %d\n", runtime.GOMAXPROCS(0))
 }
 
+func msToDuration(ms int) time.Duration {
+	return time.Duration(ms) * time.Millisecond
+}

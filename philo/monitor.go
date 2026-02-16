@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
     "fmt"
+    "sync/atomic"
 )
 
 func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) {
@@ -15,14 +16,16 @@ func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) 
 
         for i := 0; i < program.numPhilos; i++ {
             if program.philos[i].isStarving() {
-                // LOCK the logs so nothing else prints after death
-                program.logMu.Lock()
-                program.stopSim = 1
-                fmt.Printf("%d %d died\n", time.Since(program.startTime).Milliseconds(), program.philos[i].id)
-                cancel()
-                program.logMu.Unlock()
-                return
-            }
+    program.logMu.Lock()
+    // Check if someone else already ended the party
+    if atomic.LoadInt32(&program.stopSim) == 0 {
+        atomic.StoreInt32(&program.stopSim, 1)
+        fmt.Printf("%d %d died\n", time.Since(program.startTime).Milliseconds(), program.philos[i].id)
+        cancel()
+    }
+    program.logMu.Unlock()
+    return
+}
         }
 
         if program.mealsRequired != -1 && program.checkAllFull() {
