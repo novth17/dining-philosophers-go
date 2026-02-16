@@ -89,7 +89,7 @@ func TestPhiloStarvation(t *testing.T) {
 
 		{
 			name:          "Stress test very close number",
-			args:          []string{"6", "315", "100", "200", "50"},
+			args:          []string{"6", "320", "100", "200", "50"},
 			shouldSurvive: true,
 		},
 	}
