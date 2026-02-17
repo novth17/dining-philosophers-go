@@ -114,6 +114,7 @@ func TestPhiloStarvation(t *testing.T) {
 				case <-done:
 					// OK, simulation finished naturally
 				case <-time.After(60 * time.Second):
+					program.Stop()
 					t.Fatal("simulation did not finish in time")
 				}
 
@@ -135,7 +136,8 @@ func TestPhiloStarvation(t *testing.T) {
 				return
 			}
 
-			// ---- CASE 2: No meals → expect death ----
+			// ---- CASE 2: No meals → expect death - program.mealsRequired == -1 ----
+			//The simulation should only stop if someone dies.
 			timeout := program.timeDie + program.timeEat + program.timeSleep
 
 			select {
