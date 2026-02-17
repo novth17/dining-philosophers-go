@@ -16,8 +16,11 @@ run-race: race
 run-sched:
 	go build -o bin/philo ./philo
 		GODEBUG=schedtrace=1000 ./bin/philo 10000 800 200 200 > /dev/null
-#GODEBUG=gctrace=1 ./bin/philo 10000 800 200 200 > /dev/null
 #GODEBUG=schedtrace=1000 ./bin/philo 5 800 200 200 > /dev/null
+
+run-garbage:
+	go build -o bin/philo ./philo
+		GODEBUG=gctrace=1 ./bin/philo 10000 800 200 200 > /dev/null
 
 test-short:
 	go test -v -race -count=1 $(PKG) | grep -E "RUN|PASS|FAIL|died|time"
