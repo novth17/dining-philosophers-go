@@ -18,7 +18,7 @@ func TestPhiloStarvation(t *testing.T) {
         },
         {
             name:          "Instant Death",
-            args:          []string{"5", "10", "200", "200"},
+            args:          []string{"5", "5", "200", "200"},
             shouldSurvive: false,
         },
         {
@@ -31,7 +31,11 @@ func TestPhiloStarvation(t *testing.T) {
             args:          []string{"200", "800", "200", "200", "5"},
             shouldSurvive: true,
         },
-
+		{
+			name:          "Potential Deadlock",
+			args:          []string{"100", "800", "200", "200"},
+			shouldSurvive: true,
+		},
         {
             name:          "Minimal Survival Slack",
             // 410ms life, 200ms eat, 200ms sleep. 
@@ -138,14 +142,18 @@ func TestPhiloStarvation(t *testing.T) {
 
 			// ---- CASE 2: No meals → expect death - program.mealsRequired == -1 ----
 			//The simulation should only stop if someone dies.
-			timeout := program.timeDie + program.timeEat + program.timeSleep
+			survivalWindow := time.Duration(program.timeDie * 3) * time.Millisecond
+
+			if survivalWindow > 5 * time.Second {
+    			survivalWindow = 5 * time.Second
+			}
 
 			select {
 			case <-done:
 				if testcase.shouldSurvive {
 					t.Fatal("simulation ended early but should survive")
 				}
-			case <-time.After(timeout):
+			case <-time.After(survivalWindow):
 				program.Stop()
 				if !testcase.shouldSurvive {
 					t.Fatal("expected death, but simulation kept running")
