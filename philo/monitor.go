@@ -44,7 +44,7 @@ func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) 
 func (philo *Philo) isStarving() bool {
     philo.prog.mealMu.Lock()
     defer philo.prog.mealMu.Unlock()
-    return time.Since(philo.timeLastMeal) >= philo.prog.timeDie // can there be a buffer? small extra window based on real world behavior
+    return time.Since(philo.timeLastMeal) >= philo.prog.timeDie // improvement if production: can there be a buffer? small extra window based on real world behavior
 }
 
 func (program *Program) checkAllFull() bool {

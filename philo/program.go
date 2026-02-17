@@ -27,7 +27,6 @@ type Program struct {
 	philos []Philo //slice of struct Philo
 	forks []sync.Mutex //slice of struct of fork mutexes
 
-	logs      []string
 	logMu sync.Mutex
 	mealMu sync.Mutex
 	wg         sync.WaitGroup
