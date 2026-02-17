@@ -3,6 +3,7 @@ package main
 import (
 	"sync"
 	"time"
+	"context"
 )
 type Philo struct {
 	id 				int
@@ -30,16 +31,22 @@ type Program struct {
 	logMu			sync.Mutex
 	mealMu			sync.Mutex
 	wg    			sync.WaitGroup
-
+	ctx				context.Context
+	cancel			context.CancelFunc
 }
 
 func NewProgram(args []string) (*Program, error) {
-
 	var program Program
-	
+
+	ctx, cancel := context.WithCancel(context.Background())
+
+	program.ctx = ctx
+	program.cancel = cancel
+
 	err := initProgram(&program, args)
-	if (err != nil) {
+	if err != nil {
 		return nil, err
 	}
+
 	return &program, nil
 }

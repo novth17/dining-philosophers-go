@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) {
+func (program *Program) monitor(ctx context.Context) {
     for {
         if ctx.Err() != nil {
             return
@@ -20,7 +20,7 @@ func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) 
             if atomic.LoadInt32(&program.stopSim) == 0 {
                 atomic.StoreInt32(&program.stopSim, 1)
                 fmt.Printf("%d %d died\n", time.Since(program.startTime).Milliseconds(), program.philos[i].id)
-                cancel()
+                program.cancel()
             }
             program.logMu.Unlock()
             return
@@ -28,7 +28,7 @@ func (program *Program) monitor(ctx context.Context, cancel context.CancelFunc) 
         }
 
         if program.mealsRequired != -1 && program.checkAllFull() {
-            cancel()
+            program.cancel()
             return
         }
         

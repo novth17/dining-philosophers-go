@@ -136,7 +136,7 @@ func TestPhiloStarvation(t *testing.T) {
 			}
 
 			// ---- CASE 2: No meals → expect death ----
-			timeout := program.timeDie + (200 * time.Millisecond)
+			timeout := program.timeDie + program.timeEat + program.timeSleep
 
 			select {
 			case <-done:
@@ -144,10 +144,12 @@ func TestPhiloStarvation(t *testing.T) {
 					t.Fatal("simulation ended early but should survive")
 				}
 			case <-time.After(timeout):
+				program.Stop()
 				if !tt.shouldSurvive {
 					t.Fatal("expected death, but simulation kept running")
 				}
 			}
+
 		})
 	}
 }

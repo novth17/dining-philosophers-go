@@ -45,6 +45,7 @@ func initProgram(program *Program, args []string) error {
 	if err := initPhilo(program); err != nil {
 		return err
 	}
+
 	return nil
 }
 

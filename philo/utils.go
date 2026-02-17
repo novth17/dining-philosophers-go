@@ -41,3 +41,9 @@ func (program *Program) printCPUInfo() {
 func msToDuration(ms int) time.Duration {
 	return time.Duration(ms) * time.Millisecond
 }
+
+func (p *Program) Stop() {
+	if p.cancel != nil {
+		p.cancel()
+	}
+}
