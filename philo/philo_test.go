@@ -94,9 +94,9 @@ func TestPhiloStarvation(t *testing.T) {
         },
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			program, err := NewProgram(tt.args)
+	for _, testcase := range tests {
+		t.Run(testcase.name, func(t *testing.T) {
+			program, err := NewProgram(testcase.args)
 			if err != nil {
 				t.Fatalf("init failed: %v", err)
 			}
@@ -117,7 +117,7 @@ func TestPhiloStarvation(t *testing.T) {
 					t.Fatal("simulation did not finish in time")
 				}
 
-				if !tt.shouldSurvive {
+				if !testcase.shouldSurvive {
 					t.Fatal("expected death, but meals were completed")
 				}
 
@@ -140,12 +140,12 @@ func TestPhiloStarvation(t *testing.T) {
 
 			select {
 			case <-done:
-				if tt.shouldSurvive {
+				if testcase.shouldSurvive {
 					t.Fatal("simulation ended early but should survive")
 				}
 			case <-time.After(timeout):
 				program.Stop()
-				if !tt.shouldSurvive {
+				if !testcase.shouldSurvive {
 					t.Fatal("expected death, but simulation kept running")
 				}
 			}
