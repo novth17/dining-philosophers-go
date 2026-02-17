@@ -19,18 +19,17 @@ type Program struct {
 	mealsRequired 	int 
 	startTime 		time.Time
 	stopSim 		int32
-
 	// 	slice header
 	//  ├─ data *T ─────► [ Philo ][ Philo ][ Philo ]
 	//  ├─ len = 3
 	//  └─ cap = 3
 	//s := make([]int, 3, 10)
-	philos	[]Philo
-	forks	[]sync.Mutex
+	philos			[]Philo
+	forks			[]sync.Mutex
 
-	logMu	sync.Mutex
-	mealMu	sync.Mutex
-	wg    	sync.WaitGroup
+	logMu			sync.Mutex
+	mealMu			sync.Mutex
+	wg    			sync.WaitGroup
 
 }
 
