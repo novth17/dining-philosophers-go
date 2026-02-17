@@ -7,8 +7,6 @@ import (
     "os"
 )
 
-// ./philo numPhilos timeDie timeEat timeSleep [mealsRequired]
-
 var (
     ErrNegativeValue = errors.New("value must be strictly positive")
     ErrInvalidArgCount = errors.New("invalid number of arguments")

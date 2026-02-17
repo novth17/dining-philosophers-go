@@ -5,35 +5,35 @@ import (
 	"time"
 )
 type Philo struct {
-	id int
-	prog *Program
-	timeLastMeal time.Time
-	mealCount int //need mutex or atomic
+	id 				int
+	prog 			*Program
+	timeLastMeal 	time.Time
+	mealCount 		int
 }
 
 type Program struct {
-	numPhilos int
-	timeDie time.Duration
-	timeEat time.Duration
-	timeSleep time.Duration
-	mealsRequired int 
-	startTime time.Time
-	stopSim int32
+	numPhilos		int
+	timeDie			time.Duration
+	timeEat			time.Duration
+	timeSleep		time.Duration
+	mealsRequired 	int 
+	startTime 		time.Time
+	stopSim 		int32
 
 	// 	slice header
-	//  ├─ data ─────► [ Philo ][ Philo ][ Philo ]
+	//  ├─ data *T ─────► [ Philo ][ Philo ][ Philo ]
 	//  ├─ len = 3
 	//  └─ cap = 3
-	philos []Philo //slice of struct Philo
-	forks []sync.Mutex //slice of struct of fork mutexes
+	//s := make([]int, 3, 10)
+	philos	[]Philo
+	forks	[]sync.Mutex
 
-	logMu sync.Mutex
-	mealMu sync.Mutex
-	wg         sync.WaitGroup
+	logMu	sync.Mutex
+	mealMu	sync.Mutex
+	wg    	sync.WaitGroup
 
 }
 
-//this function assigns each args to the equivalent in the struct
 func NewProgram(args []string) (*Program, error) {
 
 	var program Program
