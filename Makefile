@@ -15,7 +15,8 @@ run-race: race
 
 run-sched:
 	go build -o bin/philo ./philo
-	GODEBUG=schedtrace=1000 ./bin/philo 10000 800 200 200 > /dev/null
+		GODEBUG=schedtrace=1000 ./bin/philo 10000 800 200 200 > /dev/null
+#GODEBUG=gctrace=1 ./bin/philo 10000 800 200 200 > /dev/null
 #GODEBUG=schedtrace=1000 ./bin/philo 5 800 200 200 > /dev/null
 
 test-short:

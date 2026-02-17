@@ -1,10 +1,10 @@
 package main
 
 import (
-    "errors"
-    "fmt"
-    "strconv"
-    "os"
+	"errors"
+	"fmt"
+	"os"
+	"strconv"
 )
 
 var (
