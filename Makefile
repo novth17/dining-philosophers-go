@@ -31,3 +31,11 @@ test:
 
 test-race:
 	go test -v -race -count=1 $(PKG) | tee test_result.txt
+
+clean:
+	rm -f test_result.txt
+
+fclean: clean
+	rm -f $(BIN)
+
+re: fclean build
