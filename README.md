@@ -3,6 +3,9 @@
 
 A concurrent simulation of the classic [Dining Philosophers Problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem) built in Go, demonstrating advanced concurrency patterns, deadlock prevention, and goroutine orchestration.
 
+## Ongoing
+- Front-end intergration simulation
+
 ## 🎯 Overview
 
 This project simulates multiple philosophers running concurrently as goroutines, competing for shared resources (forks) protected by mutexes. 
