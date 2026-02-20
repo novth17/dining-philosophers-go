@@ -12,11 +12,10 @@ func (program *Program) monitor(ctx context.Context) {
         if ctx.Err() != nil {
             return
         }
-
         for i := 0; i < program.numPhilos; i++ {
             if program.philos[i].isStarving() {
             program.logMu.Lock()
-            // Check if someone else already ended the party
+            //Check if someone else already ended the party
             //The atomic package uses special CPU instructions (like LOCK in x86 or LDAXR/STLXR in ARM/M-series) that lock that specific memory address for a few nanoseconds. Prevents "Dirty Reads" & ensure Visibility
             if atomic.LoadInt32(&program.stopSim) == 0 {
                 atomic.StoreInt32(&program.stopSim, 1)
